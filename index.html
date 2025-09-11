@@ -294,7 +294,7 @@ document.addEventListener('keydown',e=>{
 });
 
 // typed effect
-const text="Xin chào — Welcome to my profile!"; 
+const text="Xin chào — Welcome to my profile ai ai ai!"; 
 let idx=0;
 function typeAnim(){if(idx<=text.length){$("#typedLine").textContent=text.slice(0,idx++);setTimeout(typeAnim,90);} }
 typeAnim();
@@ -352,7 +352,8 @@ document.addEventListener("click", () => {
   if (audioCtx.state === "suspended") {
     audioCtx.resume();
   }
-});
+}); 
+  background: center / cover no-repeat url("images/bg.png");
 </script>
 </body>
 </html>
