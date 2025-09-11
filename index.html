@@ -49,7 +49,7 @@ body{background:linear-gradient(180deg,var(--bg-dark-1),var(--bg-dark-2));color:
 <body>
 <div class="bg-layer" aria-hidden="true"></div>
 <div class="canvas-wrap" id="canvasWrap" aria-hidden="true">
-  <canvas id="snowCanvas"></canvas>
+  <canvas id="matrixCanvas"></canvas>
   <canvas id="particlesCanvas"></canvas>
   <canvas id="parallaxCanvas"></canvas>
 </div>
@@ -190,7 +190,6 @@ $("#toggleSnowBtn").addEventListener('click',()=>{CONFIG.snow.enabled=!CONFIG.sn
 $("#toggleGlowBtn").addEventListener('click',()=>{CONFIG.glow.enabled=!CONFIG.glow.enabled; $("#toggleGlowBtn").innerText=`Glow: ${CONFIG.glow.enabled?'ON':'OFF'}`;});
 
 // canvas setup
-<canvas id="matrixCanvas"></canvas>
 const snowCanvas=$("#snowCanvas");const sCtx=snowCanvas.getContext('2d');
 const particlesCanvas=$("#particlesCanvas");const pCtx=particlesCanvas.getContext('2d');
 const parallaxCanvas=$("#parallaxCanvas");const paCtx=parallaxCanvas.getContext('2d');
@@ -294,6 +293,31 @@ let idx=0;
 function typeAnim(){if(idx<=text.length){$("#typedLine").textContent=text.slice(0,idx++);setTimeout(typeAnim,90);} }
 typeAnim();
 })();
+  //Background music visualizer
+const audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+const src = audioCtx.createMediaElementSource(music);
+const analyser = audioCtx.createAnalyser();
+src.connect(analyser);
+analyser.connect(audioCtx.destination);
+analyser.fftSize = 64;
+const bufferLength = analyser.frequencyBinCount;
+const dataArray = new Uint8Array(bufferLength);
+
+function drawBars(){
+  requestAnimationFrame(drawBars);
+  analyser.getByteFrequencyData(dataArray);
+  pCtx.clearRect(0,0,particlesCanvas.width,particlesCanvas.height);
+  dataArray.forEach((v,i)=>{
+    const barHeight = v/2;
+    pCtx.fillStyle = `hsl(${i*10},100%,50%)`;
+    pCtx.fillRect(i*10,particlesCanvas.height-barHeight,8,barHeight);
+  });
+}
+// gọi drawBars() khi nhạc play
+music.addEventListener("play", ()=>{
+  audioCtx.resume();
+  drawBars();
+});
 </script>
 </body>
 </html>
