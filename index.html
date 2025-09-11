@@ -101,13 +101,13 @@ const CONFIG={
   avatar:"avatar.png",
   bio:"Mai Sờ Name: Hoàng Anh Quốc — thích bú thuốc lào, xaolon, chơi game, lướt mạng và nghe nhạc.",
   email:"anhquoc30406@gmail.com",
-  socials:{facebook:"https://m.facebook.com/Mr.chicken36/",tiktok:"#",github:"https://github.com/Quoclo"},
+  socials:{facebook:"https://m.facebook.com/Mr.chicken36/",tiktok:"https://www.tiktok.com/@bowmwp311?lang=vi-VN",github:"https://github.com/Quoclo"},
   games:[
     {key:"valorant",name:"Valorant",color1:"#ff4655",color2:"#ff8a8a",id:"T4rtlezz #3043K"},
-    {key:"lmht",name:"Liên Minh Huyền Thoại",color1:"#ffcc33",color2:"#ff9f00",id:"..."},
-    {key:"pubg",name:"PUBG",color1:"#2b8cff",color2:"#1c3d7a",id:"..."},
-    {key:"lienquan",name:"Liên Quân",color1:"#00c6a7",color2:"#007b5f",id:"..."},
-    {key:"delta",name:"Delta Force",color1:"#9e59ff",color2:"#5b0dd6",id:"..."}
+    {key:"lmht",name:"Liên Minh Huyền Thoại",color1:"#ffcc33",color2:"#ff9f00",id:"Tay2VúMồmBúLôzEm #9872"},
+    {key:"pubg",name:"PUBG",color1:"#2b8cff",color2:"#1c3d7a",id:""},
+    {key:"lienquan",name:"Liên Quân",color1:"#00c6a7",color2:"#007b5f",id:"<i>ʙoωмྂ</i>"},
+    {key:"delta",name:"Delta Force",color1:"#9e59ff",color2:"#5b0dd6",id:""}
   ],
   snow:{enabled:true,count:160},
   glow:{enabled:true},
@@ -156,7 +156,7 @@ CONFIG.games.forEach(g=>{
   icon.textContent=g.name.split(' ').map(x=>x[0]).slice(0,2).join('');
   const info=document.createElement('div');
   info.className="info";
-  info.innerHTML=`<div style="font-weight:900">${g.name}</div><div class="sub">${g.id||'ID: (chưa có)'}</div>`;
+  info.innerHTML=`<div style="font-weight:900">${g.name}</div><div class="sub">${g.id||'ID: "Mr_Chicken"'}</div>`;
   card.appendChild(icon); 
   card.appendChild(info); 
   gamesRoot.appendChild(card);
@@ -288,7 +288,7 @@ document.addEventListener('keydown',e=>{
 });
 
 // typed effect
-const text="$ echo 'Xin chào — Welcome to my profile!'"; 
+const text="Xin chào — Welcome to my profile!"; 
 let idx=0;
 function typeAnim(){if(idx<=text.length){$("#typedLine").textContent=text.slice(0,idx++);setTimeout(typeAnim,90);} }
 typeAnim();
