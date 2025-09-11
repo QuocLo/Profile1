@@ -269,14 +269,45 @@ function drawParallax(t){
 }
 
 // animation loop
-function animate(now){
-  drawSnow(now);
-  drawParticles(now);
-  drawParallax(now);
-  requestAnimationFrame(animate);
-}
-requestAnimationFrame(animate);
-})();
+function drawParallax(t) {
+  // clear whole canvas
+  paCtx.clearRect(0, 0, parallaxCanvas.width, parallaxCanvas.height);
+
+  for (let li = 0; li < parallaxLayers.length; li++) {
+    const layer = parallaxLayers[li];
+    paCtx.beginPath();
+
+    // bắt đầu từ góc trái dưới
+    paCtx.moveTo(0, parallaxCanvas.height);
+
+    for (let i = 0; i < layer.pts.length; i++) {
+      const p = layer.pts[i];
+
+      // một vài bảo vệ nếu thuộc tính tên khác nhau (p.of / p.off)
+      const off = (p.of !== undefined) ? p.of : (p.off !== undefined ? p.off : 0);
+
+      // sway: dùng sin để dịch y; nhân với scale hoặc với 1 nếu không có
+      const sway = Math.sin((t / 800) + off) * (p.swayMultiplier || 1);
+
+      // nx: lệch ngang bằng cos * biên độ (dùng giá trị mặc định nếu không có)
+      const nx = p.x + Math.cos((t / 1400) + off) * (p.xAmp || 20) * (layer.xFactor || 1);
+
+      // ny: vị trí y cộng sway nhân scale lớp
+      const ny = p.y + sway * (layer.scale || 1);
+
+      paCtx.lineTo(nx, ny);
+    }
+
+    // đóng đường thẳng xuống góc phải dưới rồi đóng path
+    paCtx.lineTo(parallaxCanvas.width, parallaxCanvas.height);
+    paCtx.closePath();
+
+    // đảm bảo alpha tồn tại; tránh template literal thiếu dấu ` hoặc }
+    const alpha = (typeof layer.alpha === 'number') ? layer.alpha : 0.06;
+    paCtx.fillStyle = `rgba(3,6,8,${alpha})`;
+    paCtx.fill();
+  }
+  }
 </script>
 </body>
 </html>
