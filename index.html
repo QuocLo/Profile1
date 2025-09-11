@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Profile — Hoàng Anh Quốc (Mr_Chicken)</title>
+<meta name="description" content="Profile cá nhân — pixel forest background + snow + music + socials" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg-dark-1:#05060a; --bg-dark-2:#071021; --muted:#9fb0c6;
+  --accent1:#7c5cff; --accent2:#ff6584; --card-radius:14px;
+  --maxw:1140px; --shadow:0 14px 50px rgba(2,6,23,0.65);
+  --text:#e9f4ff; /* bổ sung biến text */
+}
+*{box-sizing:border-box;}
+html,body{height:100%;margin:0;font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased;}
+body{background:linear-gradient(180deg,var(--bg-dark-1),var(--bg-dark-2));color:#e9f4ff;display:flex;align-items:center;justify-content:center;padding:28px;overflow-x:hidden;}
+.site{width:100%;max-width:var(--maxw);display:grid;grid-template-columns:1fr 380px;gap:22px;position:relative;}
+.bg-layer{position:fixed;inset:0;background:center center / cover no-repeat url("bg.png");z-index:0;filter:saturate(0.95) contrast(0.92);}
+.canvas-wrap{position:fixed;inset:0;pointer-events:none;z-index:1;}
+.card{position:relative;z-index:5;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:var(--card-radius);padding:22px;box-shadow:var(--shadow);border:1px solid rgba(255,255,255,0.03);backdrop-filter:blur(4px) saturate(1.05);overflow:hidden;}
+.side{position:relative;z-index:5;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));border-radius:12px;padding:16px;box-shadow:0 8px 30px rgba(0,0,0,0.45);border:1px solid rgba(255,255,255,0.03);}
+.hero{display:flex;gap:18px;align-items:center;}
+.avatar{width:104px;height:104px;border-radius:12px;overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--accent1),var(--accent2));border:1px solid rgba(255,255,255,0.06);box-shadow:0 10px 30px rgba(124,92,255,0.12);}
+.avatar img{width:100%;height:100%;object-fit:cover;display:block;}
+.h1{margin:0;font-size:20px;font-weight:800;}
+.h2{margin:6px 0 0 0;color:var(--muted);font-size:13px;}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;}
+.social-btn{display:inline-flex;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;text-decoration:none;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.02);color:inherit;font-weight:700;font-size:13px;}
+.terminal{margin-top:14px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));border-radius:10px;padding:12px;font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace;color:#bfe3ff;border:1px solid rgba(255,255,255,0.02);}
+.games{margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;}
+.game{width:calc(50% - 8px);min-width:120px;background:linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.008));border-radius:10px;padding:10px;border:1px solid rgba(255,255,255,0.02);display:flex;gap:8px;align-items:center;transition: transform 220ms ease, box-shadow 220ms ease;}
+.game:hover{transform: translateY(-6px);box-shadow:0 18px 50px rgba(0,0,0,0.45);}
+.game .icon{width:44px;height:44px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:900;color:white;}
+.game .info{font-weight:800;font-size:13px;color:var(--text);}
+.game .sub{font-size:12px;color:var(--muted);}
+.actions{margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;}
+.btn{padding:10px 12px;border-radius:10px;font-weight:800;cursor:pointer;border:0;}
+.btn-primary{background:linear-gradient(90deg,var(--accent1),var(--accent2));color:white;box-shadow:0 10px 30px rgba(124,92,255,0.12);}
+.btn-ghost{background:transparent;color:var(--muted);border:1px solid rgba(255,255,255,0.04);}
+.side .title{font-weight:900;font-size:16px;}
+.side .meta{color:var(--muted);margin-top:8px;font-size:13px;}
+.controls{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;}
+#toast{position:fixed;right:18px;bottom:18px;background:linear-gradient(90deg,var(--accent1),var(--accent2));color:white;padding:12px 16px;border-radius:10px;box-shadow:0 8px 30px rgba(0,0,0,0.4);font-weight:800;z-index:9999;display:none;}
+@media(max-width:980px){.site{grid-template-columns:1fr;padding:10px;}.game{width:calc(33.333% - 8px);}.avatar{width:84px;height:84px;}.side{order:-1;}}
+</style>
+</head>
+<body>
+<div class="bg-layer" aria-hidden="true"></div>
+<div class="canvas-wrap" id="canvasWrap" aria-hidden="true">
+  <canvas id="snowCanvas"></canvas>
+  <canvas id="particlesCanvas"></canvas>
+  <canvas id="parallaxCanvas"></canvas>
+</div>
+
+<div class="site">
+<main class="card">
+<div class="hero">
+<div class="avatar" id="avatarBox"></div>
+<div style="flex:1;">
+<div class="h1" id="displayName">—</div>
+<div class="h2" id="subtitle">Profile • Pixel Forest</div>
+<div class="row" id="socialsRow"></div>
+<div class="terminal" id="typedBox"><div style="color:#9fffd0;font-size:13px;">$ ./run_profile</div><div id="typedLine" style="margin-top:8px;font-size:14px;"></div></div>
+<div class="bio" id="bioText" style="margin-top:12px;color:var(--muted);"></div>
+<div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;"><div style="font-weight:900;">Game corner</div><div class="small" style="color:var(--muted);font-size:13px;">IDs: bổ sung sau</div></div>
+<div class="games" id="gamesList"></div>
+<div class="actions" style="margin-top:16px;">
+<button class="btn btn-primary" id="hireBtn">Share Profile</button>
+<button class="btn btn-ghost" id="copyEmailBtn">Copy Email</button>
+<button class="btn btn-ghost" id="musicToggleBtn">Toggle Music</button>
+</div>
+</div></div>
+</main>
+
+<aside class="side">
+<div class="title">Quick Contact</div>
+<div class="meta" style="margin-top:8px;"><div id="sideName">—</div><div id="sideBio" class="small">—</div></div>
+<div style="margin-top:12px;"><div style="font-weight:800">Links</div><div class="row" style="margin-top:8px;">
+<a class="chip" id="linkGithub" href="#" target="_blank">GitHub</a>
+<a class="chip" id="linkFb" href="#" target="_blank">Facebook</a>
+<a class="chip" id="linkTt" href="#" target="_blank">TikTok</a>
+</div></div>
+<div style="margin-top:12px;"><div style="font-weight:800">Effects</div>
+<div class="controls">
+<button class="btn btn-ghost" id="toggleSnowBtn">Snow: ON</button>
+<button class="btn btn-ghost" id="toggleGlowBtn">Glow: ON</button>
+</div></div>
+<div style="margin-top:12px;"><div style="font-weight:800">Shortcuts</div>
+<div class="small" style="margin-top:8px;color:var(--muted)">g = open GitHub • s = share • m = toggle music</div>
+</div>
+</aside>
+</div>
+
+<div id="toast"></div>
+
+<script>
+const CONFIG={
+name:"Hoàng Anh Quốc",
+avatar:"avatar.png",
+bio:"Mai Sờ Name: Hoàng Anh Quốc — thích bú thuốc lào, xaolon, chơi game, lướt mạng và nghe nhạc.",
+email:"anhquoc30406@gmail.com",
+socials:{facebook:"https://m.facebook.com/Mr.chicken36/",tiktok:"#",github:"https://github.com/Quoclo"},
+games:[
+{key:"valorant",name:"Valorant",color1:"#ff4655",color2:"#ff8a8a",id:"T4rtlezz #3043K"},
+{key:"lmht",name:"Liên Minh Huyền Thoại",color1:"#ffcc33",color2:"#ff9f00",id:"..."},
+{key:"pubg",name:"PUBG",color1:"#2b8cff",color2:"#1c3d7a",id:"..."},
+{key:"lienquan",name:"Liên Quân",color1:"#00c6a7",color2:"#007b5f",id:"..."},
+{key:"delta",name:"Delta Force",color1:"#9e59ff",color2:"#5b0dd6",id:"..."}
+],
+snow:{enabled:true,count:160},
+glow:{enabled:true},
+musicFile:"sound/music.mp3"
+};
+(function(){
+const $=s=>document.querySelector(s);
+const el=(t,a={},txt="")=>{const e=document.createElement(t);for(const k in a)e.setAttribute(k,a[k]); if(txt)e.textContent=txt; return e;};
+const showToast=msg=>{const t=$("#toast");t.textContent=msg;t.style.display="block";t.style.opacity="1";clearTimeout(t._to);t._to=setTimeout(()=>{t.style.opacity='0';},1800);setTimeout(()=>t.style.display='none',2200);};
+
+// populate profile UI
+$("#displayName").innerText = CONFIG.name;
+$("#subtitle").innerText = "Profile • Mr_Chicken";
+$("#bioText").innerText = CONFIG.bio;
+$("#sideName").innerText = CONFIG.name;
+$("#sideBio").innerText = CONFIG.bio;
+
+// avatar
+const avatarBox=$("#avatarBox");
+const img=new Image();
+img.src=CONFIG.avatar; img.alt=CONFIG.name+" avatar";
+img.onload=()=>{avatarBox.innerHTML='';avatarBox.appendChild(img);};
+img.onerror=()=>{
+    avatarBox.innerHTML='';
+    const initials=CONFIG.name.split(' ').map(s=>s[0]).slice(0,2).join('');
+    const f=el('div',{},initials);
+    f.style.fontWeight='900'; f.style.fontSize='30px'; f.style.color='white'; f.style.width='100%'; f.style.textAlign='center';
+    avatarBox.appendChild(f);
+};
+
+// socials row
+const socialsRoot=$("#socialsRow");
+const icons={facebook:'📘',tiktok:'🎵',github:'🐙'};
+for(const k in CONFIG.socials){
+    const a=el('a',{href:CONFIG.socials[k]||'#',target:'_blank',class:'social-btn'});
+    a.innerHTML=`${icons[k]||'🔗'} <span style="opacity:0.9">${k.charAt(0).toUpperCase()+k.slice(1)}</span>`;
+    socialsRoot.appendChild(a);
+}
+
+// games
+const gamesRoot=$("#gamesList");
+CONFIG.games.forEach(g=>{
+    const card=el('div',{class:'game'});
+    const icon=el('div',{class:'icon'},''); 
+    icon.style.background=`linear-gradient(135deg,${g.color1},${g.color2})`;
+    icon.textContent=g.name.split(' ').map(x=>x[0]).slice(0,2).join('');
+    const info=document.createElement('div');
+    info.className="info";
+    info.innerHTML=`<div style="font-weight:900">${g.name}</div><div class="sub">${g.id||'ID: (chưa có)'}</div>`;
+    card.appendChild(icon); 
+    card.appendChild(info); 
+    gamesRoot.appendChild(card);
+});
+
+// music
+const music=new Audio(CONFIG.musicFile);
+music.loop=true;
+document.addEventListener('click',()=>{if(music.paused)music.play();});
+$("#musicToggleBtn").addEventListener('click',()=>{
+    if(music.paused){music.play();showToast("Music ON");}else{music.pause();showToast("Music OFF");}
+});
+
+// copy email
+$("#copyEmailBtn").addEventListener('click',()=>{
+    navigator.clipboard?.writeText(CONFIG.email||"").then(()=>showToast("Email copied")).catch(()=>prompt("Email:",CONFIG.email));
+});
+// share profile
+$("#hireBtn").addEventListener('click',()=>{
+    if(navigator.share){navigator.share({title:CONFIG.name,text:'Check this profile',url:location.href}).catch(()=>showToast('Share cancelled'));}
+    else{navigator.clipboard?.writeText(location.href).then(()=>showToast("Profile link copied"));}
+});
+
+// side links
+$("#linkGithub").href=CONFIG.socials.github||'#';
+$("#linkFb").href=CONFIG.socials.facebook||'#';
+$("#linkTt").href=CONFIG.socials.tiktok||'#';
+
+// toggle snow/glow
+$("#toggleSnowBtn").addEventListener('click',()=>{CONFIG.snow.enabled=!CONFIG.snow.enabled; $("#toggleSnowBtn").innerText=`Snow: ${CONFIG.snow.enabled?'ON':'OFF'}`;});
+$("#toggleGlowBtn").addEventListener('click',()=>{CONFIG.glow.enabled=!CONFIG.glow.enabled; $("#toggleGlowBtn").innerText=`Glow: ${CONFIG.glow.enabled?'ON':'OFF'}`;});
+
+// canvas setup
+const snowCanvas=$("#snowCanvas");const sCtx=snowCanvas.getContext('2d');
+const particlesCanvas=$("#particlesCanvas");const pCtx=particlesCanvas.getContext('2d');
+const parallaxCanvas=$("#parallaxCanvas");const paCtx=parallaxCanvas.getContext('2d');
+
+function resizeCanvas(c){c.width=window.innerWidth;c.height=window.innerHeight;}
+[snowCanvas,particlesCanvas,parallaxCanvas].forEach(resizeCanvas);
+window.addEventListener('resize',()=>{[snowCanvas,particlesCanvas,parallaxCanvas].forEach(resizeCanvas);initSnow();initParticles();initParallax();});
+
+// snow
+let flakes=[];
+function initSnow(){flakes=[];const n=Math.max(60,Math.min(420,CONFIG.snow.count||160));
+for(let i=0;i<n;i++){flakes.push({x:Math.random()*snowCanvas.width,y:Math.random()*snowCanvas.height,r:Math.random()*2.8+0.8,d:(Math.random()*0.9)+0.1,swayOffset:Math.random()*1000});}}
+initSnow();
+function drawSnow(t){sCtx.clearRect(0,0,snowCanvas.width,snowCanvas.height);if(!CONFIG.snow.enabled)return;
+sCtx.fillStyle="rgba(255,255,255,0.95)";sCtx.beginPath();for(let i=0;i<flakes.length;i++){const f=flakes[i];const sway=Math.sin((t/900)+f.swayOffset)*18*(f.r/3);
+sCtx.moveTo(f.x+sway,f.y);sCtx.arc(f.x+sway,f.y,f.r,0,Math.PI*2);f.y+=0.6+Math.pow(f.d,1.5)+f.r*0.02;f.x+=Math.sin((t/1000)+f.swayOffset)*0.3;
+if(f.y>snowCanvas.height+30){flakes[i]={x:Math.random()*snowCanvas.width,y:-20,r:f.r,d:f.d,swayOffset:Math.random()*1000};}}sCtx.fill();}
+
+// particles
+let particles=[];
+function initParticles(){particles=[];const count=36;for(let i=0;i<count;i++){particles.push({x:snowCanvas.width*0.7+(Math.random()-0.5)*160,y:snowCanvas.height*0.55+(Math.random()-0.5)*220,r:Math.random()*2+0.8,vx:(Math.random()-0.5)*0.2,vy:(Math.random()-0.5)*0.2,alpha:0.2+Math.random()*0.8,phase:Math.random()*Math.PI*2});}}
+initParticles();
+function drawParticles(t){pCtx.clearRect(0,0,particlesCanvas.width,particlesCanvas.height);if(!CONFIG.glow.enabled)return;
+for(let i=0;i<particles.length;i++){const p=particles[i];p.x+=p.vx;p.y+=p.vy;p.phase+=0.02;
+const a=0.2+(Math.sin(p.phase+1
+const a=0.2+(Math.sin(p.phase)+1)/2*0.8;
+pCtx.beginPath();
+const g=pCtx.createRadialGradient(p.x,p.y,p.r*0.1,p.x,p.y,p.r*8);
+g.addColorStop(0,`rgba(255,230,140,${a})`);
+g.addColorStop(0.4,`rgba(255,180,90,${a*0.6})`);
+g.addColorStop(1,`rgba(0,0,0,0)`);
+pCtx.fillStyle=g;
+pCtx.fillRect(p.x-16,p.y-16,32,32);
+
+if(p.x<0||p.x>particlesCanvas.width||p.y<0||p.y>particlesCanvas.height){
+  p.x=snowCanvas.width*0.65+(Math.random()-0.5)*180;
+  p.y=snowCanvas.height*0.55+(Math.random()-0.5)*260;
+}}
+}
+
+// parallax
+let parallaxLayers=[];
+function initParallax(){
+  parallaxLayers=[];
+  for(let L=0;L<3;L++){
+    const pts=[];
+    const seg=14;
+    for(let i=0;i<=seg;i++){
+      const x=(i/seg)*parallaxCanvas.width;
+      const y=parallaxCanvas.height*0.7+L*20+Math.sin(i*0.6+L*0.8)*18;
+      pts.push({x,y,off:Math.random()*1000});
+    }
+    parallaxLayers.push({pts,speed:0.02+L*0.01,shade:0.06+L*0.06,scale:1-L*0.05});
+  }
+}
+initParallax();
+
+function drawParallax(t){
+  paCtx.clearRect(0,0,parallaxCanvas.width,parallaxCanvas.height);
+  for(let li=0;li<parallaxLayers.length;li++){
+    const layer=parallaxLayers[li];
+    paCtx.beginPath();
+    paCtx.moveTo(0,parallaxCanvas.height);
+    for(let i=0;i<layer.pts.length;i++){
+      const p=layer.pts[i];
+      const sway=Math.sin((t/800)+p.off)*(6+li*3);
+      const nx=p.x+Math.cos((t/1400)+p.off)*layer.speed*40;
+      const ny=p.y+sway*layer.scale;
+      if(i===0) paCtx.lineTo(nx,ny);
+      else paCtx.lineTo(nx,ny);
+    }
+    paCtx.lineTo(parallaxCanvas.width,parallaxCanvas.height);
+    paCtx.closePath();
+    paCtx.fillStyle=`rgba(3,6,8,${0.06+li*0.06})`;
+    paCtx.fill();
+  }
+}
+
+// animation loop
+function animate(now){
+  drawSnow(now);
+  drawParticles(now);
+  drawParallax(now);
+  requestAnimationFrame(animate);
+}
+requestAnimationFrame(animate);
+})();
+</script>
+</body>
+</html>
