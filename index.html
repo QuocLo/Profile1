@@ -190,6 +190,7 @@ $("#toggleSnowBtn").addEventListener('click',()=>{CONFIG.snow.enabled=!CONFIG.sn
 $("#toggleGlowBtn").addEventListener('click',()=>{CONFIG.glow.enabled=!CONFIG.glow.enabled; $("#toggleGlowBtn").innerText=`Glow: ${CONFIG.glow.enabled?'ON':'OFF'}`;});
 
 // canvas setup
+<canvas id="matrixCanvas"></canvas>
 const snowCanvas=$("#snowCanvas");const sCtx=snowCanvas.getContext('2d');
 const particlesCanvas=$("#particlesCanvas");const pCtx=particlesCanvas.getContext('2d');
 const parallaxCanvas=$("#parallaxCanvas");const paCtx=parallaxCanvas.getContext('2d');
