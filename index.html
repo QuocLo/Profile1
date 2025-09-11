@@ -49,8 +49,9 @@ body{background:linear-gradient(180deg,var(--bg-dark-1),var(--bg-dark-2));color:
 <body>
 <div class="bg-layer" aria-hidden="true"></div>
 <div class="canvas-wrap" id="canvasWrap" aria-hidden="true">
-  <canvas id="matrixCanvas"></canvas>
+  <canvas id="snowCanvas"></canvas>
   <canvas id="particlesCanvas"></canvas>
+  <canvas id="visualizerCanvas"></canvas>
   <canvas id="parallaxCanvas"></canvas>
 </div>
 
@@ -244,7 +245,12 @@ function initParallax(){
   for(let l=0;l<layers;l++){
     const pts=[];
     for(let x=0;x<=parallaxCanvas.width;x+=200){
-      pts.push({x,y:parallaxCanvas.height*0.55+l*40+(Math.random()*20),of:Math.random()*100,sway:20});
+      pts.push({
+  x: x,
+  y: parallaxCanvas.height*0.55 + l*40 + (Math.random()*20),
+  of: Math.random()*100,
+  sway: 20
+});
     }
     parallaxLayers.push({scale:1-l*0.1,pts});
   }
@@ -293,30 +299,59 @@ let idx=0;
 function typeAnim(){if(idx<=text.length){$("#typedLine").textContent=text.slice(0,idx++);setTimeout(typeAnim,90);} }
 typeAnim();
 })();
-  //Background music visualizer
-const audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+             //Background music visualizer
+// Tạo AudioContext và kết nối với <audio>
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 const src = audioCtx.createMediaElementSource(music);
 const analyser = audioCtx.createAnalyser();
 src.connect(analyser);
 analyser.connect(audioCtx.destination);
-analyser.fftSize = 64;
+
+// Cấu hình phân tích
+analyser.fftSize = 64; // càng lớn càng nhiều thanh
 const bufferLength = analyser.frequencyBinCount;
 const dataArray = new Uint8Array(bufferLength);
 
-function drawBars(){
+// Lấy context của canvas visualizer
+const visualizerCanvas = document.querySelector("#visualizerCanvas");
+const vCtx = visualizerCanvas.getContext("2d");
+
+// Hàm resize canvas theo màn hình
+function resizeVisualizer() {
+  visualizerCanvas.width = window.innerWidth;
+  visualizerCanvas.height = window.innerHeight;
+}
+resizeVisualizer();
+window.addEventListener("resize", resizeVisualizer);
+
+// Hàm vẽ thanh bar visualizer
+function drawBars() {
   requestAnimationFrame(drawBars);
+
   analyser.getByteFrequencyData(dataArray);
-  pCtx.clearRect(0,0,particlesCanvas.width,particlesCanvas.height);
-  dataArray.forEach((v,i)=>{
-    const barHeight = v/2;
-    pCtx.fillStyle = `hsl(${i*10},100%,50%)`;
-    pCtx.fillRect(i*10,particlesCanvas.height-barHeight,8,barHeight);
+
+  vCtx.clearRect(0, 0, visualizerCanvas.width, visualizerCanvas.height);
+
+  dataArray.forEach((v, i) => {
+    const barHeight = v / 2;
+    vCtx.fillStyle = `hsl(${i * 10}, 100%, 50%)`;
+    vCtx.fillRect(i * 12, visualizerCanvas.height - barHeight, 8, barHeight);
   });
 }
-// gọi drawBars() khi nhạc play
-music.addEventListener("play", ()=>{
-  audioCtx.resume();
+
+// Gọi drawBars khi nhạc phát
+music.addEventListener("play", () => {
+  if (audioCtx.state === "suspended") {
+    audioCtx.resume();
+  }
   drawBars();
+});
+
+// Đảm bảo resume audio context khi user click bất kỳ
+document.addEventListener("click", () => {
+  if (audioCtx.state === "suspended") {
+    audioCtx.resume();
+  }
 });
 </script>
 </body>
